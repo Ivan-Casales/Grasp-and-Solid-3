@@ -11,6 +11,13 @@ using Full_GRASP_And_SOLID.Library;
 
 namespace Full_GRASP_And_SOLID
 {
+    // Utilizé el Polymorphism Pattern, ya que la operación PrintTicket es polimórfica, porque
+    // es imlementada por dos o más objetos de diferentes tipos. De esta forma nos evitamos
+    // preguntar por el destino de la impresión en la clase AllInOnePrinter para imprimir en 
+    // diferentes destinos.
+    // También se aplica SRP ya que anteriormente la clase AllInOnePrinter tenía la responsabilidad de
+    // imprimir en los distintos medios. Ahora hay una clase para cada medio de impresión, separando
+    // las responsabilidad.
     public class Program
     {
         private static ArrayList productCatalog = new ArrayList();
@@ -26,9 +33,11 @@ namespace Full_GRASP_And_SOLID
             recipe.AddStep(new Step(GetProduct("Café"), 100, GetEquipment("Cafetera"), 120));
             recipe.AddStep(new Step(GetProduct("Leche"), 200, GetEquipment("Hervidor"), 60));
 
-            AllInOnePrinter printer = new AllInOnePrinter();
-            printer.PrintRecipe(recipe, Destination.Console);
-            printer.PrintRecipe(recipe, Destination.File);
+            IPrinter printer;
+            printer = new ConsolePrinter();
+            printer.PrintRecipe(recipe);
+            printer = new FilePrinter();
+            printer.PrintRecipe(recipe);
         }
 
         private static void PopulateCatalogs()
